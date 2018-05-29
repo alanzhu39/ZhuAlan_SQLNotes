@@ -1,5 +1,6 @@
 package com.example.alanzhu39.mycontactsapp;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,5 +40,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public static final String EXTRA_MESSAGE = "com.example.alanzhu39.mycontactsapp.MESSAGE";
+    public void SearchRecord(View view) {
+        Log.d("MyContactsApp","MainActivity: launching SearchRecord");
+        Intent intent = new Intent(this,SearchActivity.class);
+        intent.putExtra(EXTRA_MESSAGE,editName.getText().toString());
+        startActivity(intent);
+    }
 
 }
