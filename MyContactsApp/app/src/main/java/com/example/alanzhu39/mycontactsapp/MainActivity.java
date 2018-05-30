@@ -46,27 +46,35 @@ public class MainActivity extends AppCompatActivity {
     public void SearchRecord(View view) {
         Log.d("MyContactsApp","MainActivity: launching SearchRecord");
         Intent intent = new Intent(this,SearchActivity.class);
-        intent.putExtra(EXTRA_MESSAGE,editName.getText().toString());
-        intent.putExtra(EXTRA_MESSAGE,editPhone.getText().toString());
-        intent.putExtra(EXTRA_MESSAGE,editAddress.getText().toString());
+        Log.d("MyContactsApp","MainActivity: getting data");
+        Cursor cursor = myDB.getAllData();
+
+        intent.putExtra(EXTRA_MESSAGE,editName.getText().toString() + "\n" + editPhone.getText().toString() + "\n" + editAddress.getText().toString());
         startActivity(intent);
     }
 
     public void viewData(View view) {
         Log.d("MyContactApp","MainActivity: View contact button pressed");
         Cursor res = myDB.getAllData();
+        Log.d("MyContactApp","MainActivity: Cursor received");
+        Log.d("MyContactApp","MainActivity: " + res.getColumnCount());
 
         if(res.getCount() == 0) {
-            showMessage("Error","no data cound in database");
+            Log.d("MyContactApp","MainActivity: calling showMessage");
+            showMessage("Error","no data found in database");
         }
-
-        StringBuffer buffer = new StringBuffer();
-        buffer.append("ID: " + res.getString(0) + "\n");
-        buffer.append("Name: " + res.getString(1) + "\n");
-        buffer.append("Phone: " + res.getString(2) + "\n");
-        buffer.append("Address: " + res.getString(3) + "\n");
-        Log.d("MyContactApp","MainActivity: in viewData - buffer assembled");
-        showMessage("Data",buffer.toString());
+        else {
+            Log.d("MyContactApp","MainActivity: creating StringBuffer");
+            StringBuffer buffer = new StringBuffer();
+            Log.d("MyContactApp","MainActivity: adding contact data");
+            buffer.append("ID: " + res.getString(1) + "\n");
+            Log.d("MyContactApp","MainActivity: contact data added");
+            //buffer.append("Name: " + res.getString(1) + "\n");
+            //buffer.append("Phone: " + res.getString(2) + "\n");
+            //buffer.append("Address: " + res.getString(3) + "\n");
+            Log.d("MyContactApp", "MainActivity: in viewData - buffer assembled");
+            showMessage("Data", buffer.toString());
+        }
 
     }
 

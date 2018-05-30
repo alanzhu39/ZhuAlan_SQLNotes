@@ -67,7 +67,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Cursor getAllData() {
         Log.d("MyContactApp","DatabaseHelper: getAllData called");
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor res = db.rawQuery("select * from " + TABLE_NAME, null);
+        Cursor res = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
+        Log.d("MyContactApp","DatabaseHelper: Cursor created");
         return res;
     }
 }
