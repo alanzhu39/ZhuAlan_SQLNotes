@@ -1,6 +1,8 @@
 package com.example.alanzhu39.mycontactsapp;
 
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -45,7 +47,35 @@ public class MainActivity extends AppCompatActivity {
         Log.d("MyContactsApp","MainActivity: launching SearchRecord");
         Intent intent = new Intent(this,SearchActivity.class);
         intent.putExtra(EXTRA_MESSAGE,editName.getText().toString());
+        intent.putExtra(EXTRA_MESSAGE,editPhone.getText().toString());
+        intent.putExtra(EXTRA_MESSAGE,editAddress.getText().toString());
         startActivity(intent);
     }
 
+    public void viewData(View view) {
+        Log.d("MyContactApp","MainActivity: View contact button pressed");
+        Cursor res = myDB.getAllData();
+
+        if(res.getCount() == 0) {
+            showMessage("Error","no data cound in database");
+        }
+
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("ID: " + res.getString(0) + "\n");
+        buffer.append("Name: " + res.getString(1) + "\n");
+        buffer.append("Phone: " + res.getString(2) + "\n");
+        buffer.append("Address: " + res.getString(3) + "\n");
+        Log.d("MyContactApp","MainActivity: in viewData - buffer assembled");
+        showMessage("Data",buffer.toString());
+
+    }
+
+    public void showMessage(String title, String message) {
+        Log.d("MyContactApp","MainActivity: showMessage - building alert dialog");
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(true);
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.show();
+    }
 }
