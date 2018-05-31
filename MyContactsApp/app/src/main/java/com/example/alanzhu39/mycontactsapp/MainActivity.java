@@ -47,9 +47,26 @@ public class MainActivity extends AppCompatActivity {
         Log.d("MyContactsApp","MainActivity: launching SearchRecord");
         Intent intent = new Intent(this,SearchActivity.class);
         Log.d("MyContactsApp","MainActivity: getting data");
-        Cursor cursor = myDB.getAllData();
-
-        intent.putExtra(EXTRA_MESSAGE,editName.getText().toString() + "\n" + editPhone.getText().toString() + "\n" + editAddress.getText().toString());
+        Cursor res = myDB.getAllData();
+        if(res.getCount() == 0) {
+            Log.d("MyContactApp","MainActivity: calling showMessage");
+            showMessage("Error","no data found in database");
+            return;
+        }
+        Log.d("MyContactApp","MainActivity: creating StringBuffer");
+        StringBuffer buffer = new StringBuffer();
+        Log.d("MyContactApp","MainActivity: comparing contact info");
+        res.move(-res.getCount());
+        while(res.moveToNext()) {
+            if(res.getString(1).equals(editName.getText().toString()) || res.getString(2).equals(editPhone.getText().toString()) || res.getString(3).equals(editAddress.getText().toString())) {
+                buffer.append("ID: " + res.getString(0) + "\n");
+                buffer.append("Name: " + res.getString(1) + "\n");
+                buffer.append("Phone: " + res.getString(2) + "\n");
+                buffer.append("Address: " + res.getString(3) + "\n");
+            }
+        }
+        Log.d("MyContactApp", "MainActivity: in viewData - buffer assembled");
+        intent.putExtra(EXTRA_MESSAGE,buffer.toString());
         startActivity(intent);
     }
 
@@ -57,24 +74,22 @@ public class MainActivity extends AppCompatActivity {
         Log.d("MyContactApp","MainActivity: View contact button pressed");
         Cursor res = myDB.getAllData();
         Log.d("MyContactApp","MainActivity: Cursor received");
-        Log.d("MyContactApp","MainActivity: " + res.getColumnCount());
-
         if(res.getCount() == 0) {
             Log.d("MyContactApp","MainActivity: calling showMessage");
             showMessage("Error","no data found in database");
+            return;
         }
-        else {
-            Log.d("MyContactApp","MainActivity: creating StringBuffer");
-            StringBuffer buffer = new StringBuffer();
-            Log.d("MyContactApp","MainActivity: adding contact data");
-            buffer.append("ID: " + res.getString(1) + "\n");
-            Log.d("MyContactApp","MainActivity: contact data added");
-            //buffer.append("Name: " + res.getString(1) + "\n");
-            //buffer.append("Phone: " + res.getString(2) + "\n");
-            //buffer.append("Address: " + res.getString(3) + "\n");
-            Log.d("MyContactApp", "MainActivity: in viewData - buffer assembled");
-            showMessage("Data", buffer.toString());
+        Log.d("MyContactApp","MainActivity: creating StringBuffer");
+        StringBuffer buffer = new StringBuffer();
+        Log.d("MyContactApp","MainActivity: adding contact data");
+        while(res.moveToNext()) {
+            buffer.append("ID: " + res.getString(0) + "\n");
+            buffer.append("Name: " + res.getString(1) + "\n");
+            buffer.append("Phone: " + res.getString(2) + "\n");
+            buffer.append("Address: " + res.getString(3) + "\n");
         }
+        Log.d("MyContactApp", "MainActivity: in viewData - buffer assembled");
+        showMessage("Data", buffer.toString());
 
     }
 
